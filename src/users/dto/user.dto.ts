@@ -1,0 +1,30 @@
+import { IsNumber, IsString, IsNotEmpty , IsPositive, IsOptional } from 'class-validator';
+import { Exclude, Expose } from 'class-transformer';
+
+export class CreateUserDTO {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+}
+
+export class UpdateUserDTO { 
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+}
