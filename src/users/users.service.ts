@@ -69,6 +69,10 @@ export class UsersService {
     return updateUser
   }
 
+  deleteUser(id: number) {
+    return this.userRepository.delete({ id })
+  }
+
   // async getById(id: number) {
   //   const user = await this.userRepository.findBy({id});
   //   return {
