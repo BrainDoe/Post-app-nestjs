@@ -50,6 +50,7 @@ export class UsersService {
     if(!passwordMatch) {
       throw new BadRequestException('Invalid Credentials');
     }
+    // return {token};
 
     return {
       id: existingUser.id,
@@ -69,18 +70,15 @@ export class UsersService {
     return updateUser
   }
 
-  deleteUser(id: number) {
-    return this.userRepository.delete({ id })
+  async deleteUser(id: number) {
+    return await this.userRepository.delete(id)
   }
 
-  // async getById(id: number) {
-  //   const user = await this.userRepository.findBy({id});
-  //   return {
-  //     id: user.id,
-  //     name: user.name,
-  //     email: user.email
-  //   }
-  // }
+  async getById(id: number) {
+    const user = await this.userRepository.findOne({where: {id}, order: {id: 'ASC'},
+    select: ['name', 'email', 'id']});
+    return user;
+  }
 
   private async _hashPassword(password: string) {
     const salt = 10;
@@ -90,4 +88,14 @@ export class UsersService {
   private async comparePassword(password: string, hash: string) {
     return bcrypt.compare(password, hash);
   }
+
+  // SIGN JWT TOKEN
+  // private _signToken = (args: {id: number, email: string}) => {
+  //   return this.jwt.signAsync(args, {secret: jwtSecret});
+  // }
+
+  // SIGN JWT REFRESH TOKEN
+  // private _signRefreshToken = (id: number, email: string) => {
+  //   return this.jwt.sign({id, email});
+  // }
 }

@@ -1,15 +1,13 @@
-// export const typeOrmConfiguration: TypeOrmModuleOptions = {
-//   type: 'mysql',
-//   host: 'localhost',
-//   port: 3306,
-//   username: 'root',
-//   password: '',
-//   database: 'postsapp',
-//   entities: [],
-//   synchronize: true,
-//   retryAttempts: 3,
-//   retryDelay: 2000,
-//   autoLoadEntities: true,
-//   keepConnectionAlive: true,
-//   verboseRetryLog: true
-// }
+import { User } from 'src/typeorm/entities/User.entity';
+import { MysqlConnectionOptions} from 'typeorm/driver/mysql/MysqlConnectionOptions';
+
+export const typeOrmConfig: MysqlConnectionOptions = {
+  type: 'mysql',
+  host: 'localhost',
+  port: 3306,
+  username: 'root',
+  password: '',
+  database: 'postsapp',
+  entities: [User],
+  synchronize: true
+}

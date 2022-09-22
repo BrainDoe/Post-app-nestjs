@@ -1,4 +1,4 @@
-import { IsNumber, IsString, IsNotEmpty , IsPositive, IsOptional } from 'class-validator';
+import { IsNumber, IsString, IsNotEmpty , IsPositive, IsOptional, IsEmail } from 'class-validator';
 import { Exclude, Expose } from 'class-transformer';
 
 export class CreateUserDTO {
@@ -8,6 +8,7 @@ export class CreateUserDTO {
 
   @IsString()
   @IsNotEmpty()
+  @IsEmail()
   email: string;
 
   @IsString()
