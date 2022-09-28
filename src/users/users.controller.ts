@@ -11,23 +11,6 @@ export class UsersController {
     return this.usersService.getAllUsers();
   }
 
-  @Get(':id')
-  getUser(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.getById(id);
-  }
-
-  @Post('')
-  @UsePipes(new ValidationPipe({whitelist: true}))
-  createUser(@Body() userData: CreateUserDTO) {
-    return this.usersService.createUser(userData);
-  }
-
-  // @UsePipes(new ValidationPipe({whitelist: true}))
-  @Post('login')
-  loginUser(@Body() userData: LoginUserDTO) {
-    return this.usersService.logInUser(userData);
-  }
-
   @Put(':id')
   updateUser(@Param('id', ParseIntPipe) id: number, @Body() user: UpdateUserDTO) {
     return this.usersService.updateUser(id, user);

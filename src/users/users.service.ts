@@ -16,49 +16,6 @@ export class UsersService {
     });
   }
 
-  async createUser(user: CreateUserType) {
-    const {name, email, password} = user;
-
-    const existingUser = await this.userRepository.findOne({where: {email}});
-    if(existingUser) {
-      throw new BadRequestException('User already exists');
-    }
-
-    const hashedPassword = await this._hashPassword(password);
-
-    const newUser = this.userRepository.create({
-      name, email, password: hashedPassword
-    })
-
-    const savedUser = await this.userRepository.save(newUser);
-    return {
-      id: savedUser.id,
-      name: savedUser.name,
-      email: savedUser.email
-    };
-  }
-
-  async logInUser(user: LoginUserType) {
-    const {email, password} = user;
-
-    const existingUser = await this.userRepository.findOne({where: {email}});
-    if(!existingUser) {
-      throw new BadRequestException('Ivalid Credentials');
-    }
-
-    const passwordMatch = await this.comparePassword(password, existingUser.password);
-    if(!passwordMatch) {
-      throw new BadRequestException('Invalid Credentials');
-    }
-    // return {token};
-
-    return {
-      id: existingUser.id,
-      name: existingUser.name,
-      email: existingUser.email
-    }
-  }
-
   async updateUser(id: number, user: UpdateUserType) {
     let pass: string;
     if(user.password) {
@@ -88,14 +45,4 @@ export class UsersService {
   private async comparePassword(password: string, hash: string) {
     return bcrypt.compare(password, hash);
   }
-
-  // SIGN JWT TOKEN
-  // private _signToken = (args: {id: number, email: string}) => {
-  //   return this.jwt.signAsync(args, {secret: jwtSecret});
-  // }
-
-  // SIGN JWT REFRESH TOKEN
-  // private _signRefreshToken = (id: number, email: string) => {
-  //   return this.jwt.sign({id, email});
-  // }
 }
