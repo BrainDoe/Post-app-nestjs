@@ -80,7 +80,7 @@ export class AuthService {
 
   async refreshTokens(id: number, rt: string, res: Response) {
     const user = await this.userRepository.findOne({where: {id} });
-    if(!user) throw new BadRequestException('Invalid Credentials');
+    if(!user || user.hashedRt) throw new BadRequestException('Invalid Credentials');
 
     const {password, role, hashedRt, ...rest} = user;
     const rtMatch = await this.compareHash(rt, hashedRt);
