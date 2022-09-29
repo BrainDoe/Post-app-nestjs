@@ -22,6 +22,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column()
+  hashedRt: string;
+
   @Column({
     type: "enum",
     enum: UserRole,

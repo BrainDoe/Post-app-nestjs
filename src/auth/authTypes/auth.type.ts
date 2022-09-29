@@ -8,3 +8,8 @@ export type LoginUserType = {
   email: string;
   password: string;
 }
+
+export type Tokens = {
+  accessToken: string;
+  refreshToken: string;
+}
