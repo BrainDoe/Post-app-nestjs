@@ -39,12 +39,6 @@ export class AuthService {
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken
     }
-
-    return {
-      id: savedUser.id,
-      name: savedUser.name,
-      email: savedUser.email
-    };
   }
 
   async logInUser(user: LoginUserType, res: Response) {
@@ -74,12 +68,6 @@ export class AuthService {
         refreshToken: tokens.refreshToken
       }
     })
-
-    return {
-      id: existingUser.id,
-      name: existingUser.name,
-      email: existingUser.email
-    }
   }
 
   async logout(userId: number) {
@@ -88,6 +76,27 @@ export class AuthService {
       message: 'Success',
       data: 'Logged Out'
     }
+  }
+
+  async refreshTokens(id: number, rt: string, res: Response) {
+    const user = await this.userRepository.findOne({where: {id} });
+    if(!user) throw new BadRequestException('Invalid Credentials');
+
+    const {password, role, hashedRt, ...rest} = user;
+    const rtMatch = await this.compareHash(rt, hashedRt);
+    if(!rtMatch) throw new BadRequestException('Invalid Credentials...');
+    
+    const tokens = await this._getTokens(rest.id, rest.email);
+    await this._updateRtHash(rest.id, tokens.refreshToken);
+
+    return res.status(200).json({
+      message: 'Success',
+      data: {
+        ...rest,
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken
+      }
+    })
   }
 
   // Utility functions

@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Req, Res
 import { CreateUserDTO, LoginUserDTO } from './dto/auth.dto';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 @Controller('api/v1/auth')
 export class AuthController {
@@ -16,7 +16,7 @@ export class AuthController {
 
   @UsePipes(new ValidationPipe({whitelist: true}))
   @Post('login')
-  loginUser(@Body() userData: LoginUserDTO, @Res() res: any) {
+  loginUser(@Body() userData: LoginUserDTO, @Res() res: Response) {
     return this.authService.logInUser(userData, res);
   }
 
@@ -25,5 +25,12 @@ export class AuthController {
   logout(@Req() req: Request) {
     const user = req.user['sub'];
     return this.authService.logout(user);
+  }
+
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @Post('refresh')
+  refreshTokens(@Req() req: Request, @Res() res: Response) {
+    const user = req.user;
+    return this.authService.refreshTokens(user['sub'], user['refreshToken'], res);
   }
 }
