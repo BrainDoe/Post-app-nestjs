@@ -3,6 +3,8 @@ import { CreateUserDTO, LoginUserDTO } from './dto/auth.dto';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
+import { AtGuard, RtGuard } from './common/guards';
+import { GetCurrentUser, GetCurrentUserId } from './common/decorators';
 
 @Controller('api/v1/auth')
 export class AuthController {
@@ -20,17 +22,24 @@ export class AuthController {
     return this.authService.logInUser(userData, res);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AtGuard)
   @Post('logout')
-  logout(@Req() req: Request) {
-    const user = req.user['sub'];
-    return this.authService.logout(user);
+  logout(@GetCurrentUserId() userId: number) {
+    return this.authService.logout(userId);
   }
 
-  @UseGuards(AuthGuard('jwt-refresh'))
+  @UseGuards(RtGuard)
   @Post('refresh')
-  refreshTokens(@Req() req: Request, @Res() res: Response) {
-    const user = req.user;
-    return this.authService.refreshTokens(user['sub'], user['refreshToken'], res);
+  refreshTokens(@GetCurrentUserId() userId: number, @GetCurrentUser('refreshToken') refreshToken: string, @Res() res: Response) {
+    return this.authService.refreshTokens(userId, refreshToken, res);
   }
+  
+
+
+  // @UseGuards(RtGuard)
+  // @Post('refresh')
+  // refreshTokens(@Req() req: Request, @Res() res: Response) {
+  //   const user = req.user;
+  //   return this.authService.refreshTokens(user['sub'], user['refreshToken'], res);
+  // }
 }
