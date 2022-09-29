@@ -83,7 +83,11 @@ export class AuthService {
   }
 
   async logout(userId: number) {
-    return await this.userRepository.update({id: userId}, {hashedRt: null }  )
+    await this.userRepository.update({id: userId}, {hashedRt: null }  );
+    return {
+      message: 'Success',
+      data: 'Logged Out'
+    }
   }
 
   // Utility functions

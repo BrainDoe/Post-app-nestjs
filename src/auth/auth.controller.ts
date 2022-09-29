@@ -20,10 +20,10 @@ export class AuthController {
     return this.authService.logInUser(userData, res);
   }
 
-  @Post('logout')
   @UseGuards(AuthGuard('jwt'))
+  @Post('logout')
   logout(@Req() req: Request) {
-    const user = req.user;
-    return this.logout(user['sub']);
+    const user = req.user['sub'];
+    return this.authService.logout(user);
   }
 }
