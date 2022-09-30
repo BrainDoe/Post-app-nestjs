@@ -34,7 +34,18 @@ export class AuthController {
     return this.authService.refreshTokens(userId, refreshToken, res);
   }
   
+  @UseGuards(AtGuard)
+  @Get('me')
+  getUserById(@GetCurrentUserId() userId: number) {
+    return this.authService.getUserById(userId);
+  }
 
+  // @UseGuards(AuthGuard('jwt'))
+  // @Get('me')
+  // getUserById(@Req() req: Request) {
+  //   const user = req.user
+  //   return this.usersService.getUserById(userId);
+  // }
 
   // @UseGuards(RtGuard)
   // @Post('refresh')

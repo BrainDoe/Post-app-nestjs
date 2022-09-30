@@ -1,3 +1,4 @@
+import { Post } from 'src/typeorm/entities/Post.entity';
 import { User } from 'src/typeorm/entities/User.entity';
 import { MysqlConnectionOptions} from 'typeorm/driver/mysql/MysqlConnectionOptions';
 
@@ -8,6 +9,6 @@ export const typeOrmConfig: MysqlConnectionOptions = {
   username: 'root',
   password: '',
   database: 'postsapp',
-  entities: [User],
+  entities: [User, Post],
   synchronize: true
 }

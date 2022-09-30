@@ -22,7 +22,7 @@ export class UsersService {
       pass = await this._hashPassword(user.password)
     }
     user.password = pass;
-    const updateUser = await this.userRepository.update({ id }, { ...user });
+    const updateUser = await this.userRepository.update(id , { ...user });
 
     return updateUser
   }
@@ -31,8 +31,8 @@ export class UsersService {
     return await this.userRepository.delete(id)
   }
 
-  async getById(id: number) {
-    const user = await this.userRepository.findOne({where: {id}, order: {id: 'ASC'},
+  async getUserById(userId: number) {
+    const user = await this.userRepository.findOne({where: {id: userId}, order: {id: 'ASC'},
     select: ['name', 'email', 'id']});
     return user;
   }

@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Post } from './Post.entity';
 
 export enum UserRole {
   USER = 'user',
@@ -31,4 +32,8 @@ export class User {
     default: UserRole.USER,
   })
   role: UserRole
+
+  @OneToMany(() => Post, (post) => post.owner, {cascade: true})
+  @JoinColumn()
+  owner: Post[]
 }

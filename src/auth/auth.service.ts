@@ -80,7 +80,7 @@ export class AuthService {
 
   async refreshTokens(id: number, rt: string, res: Response) {
     const user = await this.userRepository.findOne({where: {id} });
-    if(!user || user.hashedRt) throw new BadRequestException('Invalid Credentials');
+    if(!user || !user.hashedRt) throw new BadRequestException('Invalid Credentials');
 
     const {password, role, hashedRt, ...rest} = user;
     const rtMatch = await this.compareHash(rt, hashedRt);
@@ -131,6 +131,12 @@ export class AuthService {
     const hash = await this._hashData(rt);
 
     const existingUser = await this.userRepository.update({id: userId}, { hashedRt: hash});
+  }
+
+  async getUserById(userId: number) {
+    const user = await this.userRepository.findOne({where: {id: userId}, order: {id: 'ASC'},
+    select: ['name', 'email', 'id']});
+    return user;
   }
 
   // SIGN JWT TOKEN
