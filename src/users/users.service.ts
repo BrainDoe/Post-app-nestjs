@@ -9,8 +9,8 @@ import { UpdateUserType } from './userType/user.type';
 export class UsersService {
   constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
 
-  getAllUsers() {
-    return this.userRepository.find({
+  async getAllUsers() {
+    return await this.userRepository.find({
       order: {id: 'ASC'},
       select: ['name', 'email', 'id']
     });

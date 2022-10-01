@@ -4,37 +4,40 @@ import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { AtGuard, RtGuard } from './common/guards';
-import { GetCurrentUser, GetCurrentUserId } from './common/decorators';
+import { GetCurrentUser, GetCurrentUserId, Public } from './common/decorators';
 
 @Controller('api/v1/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Post('register')
   @UsePipes(new ValidationPipe({whitelist: true}))
   createUser(@Body() userData: CreateUserDTO) {
     return this.authService.createUser(userData);
   }
 
+  @Public()
   @UsePipes(new ValidationPipe({whitelist: true}))
   @Post('login')
   loginUser(@Body() userData: LoginUserDTO, @Res() res: Response) {
     return this.authService.logInUser(userData, res);
   }
 
-  @UseGuards(AtGuard)
+  // @UseGuards(AtGuard)
   @Post('logout')
   logout(@GetCurrentUserId() userId: number) {
     return this.authService.logout(userId);
   }
 
+  @Public()
   @UseGuards(RtGuard)
   @Post('refresh')
   refreshTokens(@GetCurrentUserId() userId: number, @GetCurrentUser('refreshToken') refreshToken: string, @Res() res: Response) {
     return this.authService.refreshTokens(userId, refreshToken, res);
   }
   
-  @UseGuards(AtGuard)
+  // @UseGuards(AtGuard)
   @Get('me')
   getUserById(@GetCurrentUserId() userId: number) {
     return this.authService.getUserById(userId);
